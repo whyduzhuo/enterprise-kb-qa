@@ -1,0 +1,53 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: enterprise-kb-qa
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+  freemarker:
+    suffix: .ftl
+    cache: false
+    charset: UTF-8
+    content-type: text/html
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+  ai:
+    model:
+      chat: ollama
+      embedding: ollama
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        options:
+          model: qwen3.5:9b
+          temperature: 0.2
+          num-ctx: 8192
+      embedding:
+        options:
+          model: nomic-embed-text
+      init:
+        pull-model-strategy: never
+        timeout: 120s
+    vectorstore:
+      pgvector:
+        initialize-schema: true
+        index-type: HNSW
+        distance-type: COSINE_DISTANCE
+        dimensions: 768
+        schema-name: public
+        table-name: vector_store
+
+logging:
+  level:
+    org.springframework.ai: INFO
+    com.example.kbqa: DEBUG
